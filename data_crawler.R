@@ -2,7 +2,7 @@
 library(tidyverse)
 library(rvest)
 # setwd("/Users/KokiAndo/Desktop/Python/Doshisha")
-Sys.setlocale("LC_TIME", "de_DE")
+# Sys.setlocale("LC_TIME", "de_DE")
 ## Data Scraping Part
 ## Press data
 
@@ -15,7 +15,7 @@ Doshisha_Data_Scraping <- function (url) {
     html_nodes("dt") %>% 
     html_nodes("span") %>% 
     html_text() %>% 
-    str_remove("'")
+    str_replace("'", "20")
   
   # Title data
   content_title <- page %>% 
@@ -48,14 +48,13 @@ news_topic <- Doshisha_Data_Scraping(topic_url)
 
 # Merge datasets
 Doshisha.News.df <- bind_rows(news_important, news_info, news_topic)
-write.csv(Doshisha.News.df, "Doshisha_news.csv")
 
-test <- read.csv("Doshisha_news.csv", encoding = "SHIFT-JIS")
+# Cleaning dataset
+Doshisha.News.df$publish_date <- Doshisha.News.df$publish_date %>% 
+  str_replace("???", "-") %>% 
+  str_replace("???", "-") %>% 
+  str_remove("???")
+Doshisha.News.df$publish_date <- as.Date(Doshisha.News.df$publish_date)
 
-
-
-page %>% 
-  html_nodes("dt") %>% 
-  html_nodes("span") %>% 
-  html_text() %>% 
-  str_remove("'")
+# Exporting dataset
+write.csv(Doshisha.News.df, "/Users/KokiAndo/Desktop/Python/Doshisha/Data/Doshisha_news.csv")
