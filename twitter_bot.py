@@ -2,20 +2,12 @@ import tweepy
 import datetime
 import pandas as pd
 
-# @ko25and
-appname = "koki25ando"
-consumer_key = 'MWoMFMiEyA0MrigZFL1ysDShc'
-consumer_secret = 'ZEiofsto5uGOA4SAhrEQ1E5yJDOFkaAuHVqrALX8o7Jlxy8u89'
-access_token = '2183834275-ACgyhcjpMjKKz0F8DpzdVl3PNXGuUy7XhVwUBEe'
-access_secret = 'IPLnlh6m6py3lA1IeOLl5fvIHOlqr2yG7hpCgOHCRVgRe'
-
 # @doshishauni_inf
-'''
-consumer_key = ''
-consumer_secret = ''
-access_token = ''
-access_secret = ''
-'''
+appname = 'DoshishaNews_Bot'
+consumer_key = 'MVvmXgcswDTez6n4SRB89oWUT'
+consumer_secret = 'YdMUBRowq55WqwgqGStK5GjXU0sFJ4yjEuM6o4u1eYJin6NoN9'
+access_token = '1060894340912795648-UH8qqX3cWE3zgUF7rR8cP6CL5hZFeJ'
+access_secret = 'dEjiDGDQ0QzDaqzmmrqeud9b6BhTQ6d64vzVMVdtM0j0J'
 
 # login to twitter account api
 '''
@@ -27,19 +19,22 @@ print("Access Token:", auth.access_token)
 print("Access Token Secret:", auth.access_token_secret)
 '''
 ##### Twitter Authentication
+
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_secret)
 api = tweepy.API(auth)
 
 
 # Tweet content
+
 date = datetime.datetime.now()
 today = "{}-{}-{}".format(date.year, date.month, date.day)
 day = '2018-11-08'
 the_other_day = '2018-08-22'
+the_day = '2018-11-08'
 
 doshisha_news = pd.read_csv("/Users/KokiAndo/Desktop/Python/Doshisha/Data/Doshisha_news.csv")
-doshisha_news_today = doshisha_news[doshisha_news['publish_date'] == the_other_day]
+doshisha_news_today = doshisha_news[doshisha_news['publish_date'] == today]
 
 if len(doshisha_news_today) is 0:
     pass
@@ -51,9 +46,5 @@ else:
         title_url = doshisha_news_today.iloc[[i]]['content_url']
 
         msg = "{}:{}\n{}\n{}".format(publish_date.values, news_type.values, title.values, title_url.values)
-        print(msg.replace("['", "").replace("']", ""))
-
-
-
-# post text
-api.update_status('game is tied')
+        # print(msg.replace("['", "").replace("']", ""))
+        api.update_status(msg.replace("['", "").replace("']", ""))
