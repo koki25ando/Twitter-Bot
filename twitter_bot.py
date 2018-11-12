@@ -28,10 +28,7 @@ api = tweepy.API(auth)
 # Tweet content
 
 date = datetime.datetime.now()
-today = "{}-{}-{}".format(date.year, date.month, date.day)
-day = '2018-11-08'
-the_other_day = '2018-08-22'
-the_day = '2018-11-08'
+today = "{}年{}月{}日".format(date.year, date.month, date.day)
 
 doshisha_news = pd.read_csv("/Users/KokiAndo/Desktop/Python/Doshisha/Data/Doshisha_news.csv")
 doshisha_news_today = doshisha_news[doshisha_news['publish_date'] == today]

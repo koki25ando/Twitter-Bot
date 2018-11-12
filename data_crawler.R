@@ -1,10 +1,7 @@
 # Package preparatinon
 library(tidyverse)
 library(rvest)
-# setwd("/Users/KokiAndo/Desktop/Python/Doshisha")
 # Sys.setlocale("LC_TIME", "de_DE")
-## Data Scraping Part
-## Press data
 
 Doshisha_Data_Scraping <- function (url) {
   # Requesting connection
@@ -39,22 +36,27 @@ Doshisha_Data_Scraping <- function (url) {
 
 ## Execute functions Doshisha_Data_Scraping()
 important = "https://www.doshisha.ac.jp/news/important/2018/1"
-press_url = "https://www.doshisha.ac.jp/news/info/2018/1"
+press_url = "https://www.doshisha.ac.jp/news/press/2018/1"
 topic_url = "https://www.doshisha.ac.jp/news/topics/2018/1"
+info_url = "https://www.doshisha.ac.jp/news/info/2018/1"
+
 
 news_important <- Doshisha_Data_Scraping(important)
-news_info <- Doshisha_Data_Scraping(press_url)
+news_press <- Doshisha_Data_Scraping(press_url)
 news_topic <- Doshisha_Data_Scraping(topic_url)
+news_info <- Doshisha_Data_Scraping(info_url)
+
 
 # Merge datasets
-Doshisha.News.df <- bind_rows(news_important, news_info, news_topic)
+# Doshisha.News.df <- bind_rows(news_important, news_info, news_topic, news_press, .id = "id")
+Doshisha.News.df <- rbind(news_important, news_info, news_topic, news_press)
 
 # Cleaning dataset
-Doshisha.News.df$publish_date <- Doshisha.News.df$publish_date %>% 
-  str_replace("???", "-") %>% 
-  str_replace("???", "-") %>% 
-  str_remove("???")
-Doshisha.News.df$publish_date <- as.Date(Doshisha.News.df$publish_date)
+# Doshisha.News.df$publish_date <- Doshisha.News.df$publish_date %>% 
+#  str_replace("???", "-") %>% 
+#  str_replace("???", "-") %>% 
+#  str_remove("???")
+# Doshisha.News.df$publish_date <- as.Date(Doshisha.News.df$publish_date)
 
 # Exporting dataset
 write.csv(Doshisha.News.df, "/Users/KokiAndo/Desktop/Python/Doshisha/Data/Doshisha_news.csv")
