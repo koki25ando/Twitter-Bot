@@ -31,7 +31,7 @@ api = tweepy.API(auth)
 
 date = datetime.datetime.now()
 today = "{}-{}-{}".format(date.year, date.month, date.day)
-the_day = "2018年11月12日"
+the_day = "2018-11-13"
 
 # Starts of Scraping Scripts
 
