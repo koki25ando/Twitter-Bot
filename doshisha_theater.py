@@ -7,10 +7,10 @@ from urllib.request import urlopen as uReq
 
 # @doshishauni_inf
 appname = 'DoshishaNews_Bot'
-consumer_key = 'MVvmXgcswDTez6n4SRB89oWUT'
-consumer_secret = 'YdMUBRowq55WqwgqGStK5GjXU0sFJ4yjEuM6o4u1eYJin6NoN9'
-access_token = '1060894340912795648-UH8qqX3cWE3zgUF7rR8cP6CL5hZFeJ'
-access_secret = 'dEjiDGDQ0QzDaqzmmrqeud9b6BhTQ6d64vzVMVdtM0j0J'
+consumer_key = os.environ.get('doshisha_tb_consumer_key')
+consumer_secret = os.environ.get('doshisha_tb_consumer_secret')
+access_token = os.environ.get('doshisha_tb_access_token')
+access_secret = os.environ.get('doshisha_tb_access_secret')
 
 ##### Twitter Authentication
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
@@ -55,22 +55,25 @@ for i in range(0, len(doshisha_theater_news)):
 
 
     diff = datetime.datetime.strptime(open_date, datetimeFormat) - datetime.datetime.strptime(today, datetimeFormat)
-    days_left = int(diff.__str__()[0:2])
+    if diff != 0:
+        days_left = diff.__str__()[:2]
+    else:
+        days_left = diff.__str__()
 
     if open_date == today:
-        msg = "同志社大学映画上映情報: 本日上映！\n{}\n{}\n{}".format(tweet_title,
+        msg = "同志社大学映画上映情報:本日上映！\n{}\n{}\n{}".format(tweet_title,
                                                       tweet_info,
                                                       tweet_link.replace("../movie", "http://www.d-live.info/program/movie"))
         # print(msg.replace("</p>, <p>", "\n").replace("[<p>", "").replace("</p>]", ""))
         api.update_status(msg.replace("</p>, <p>", "\n").replace("[<p>", "").replace("</p>]", ""))
-    elif days_left >= 7:
-        msg = "同志社大学映画上映情報: 開催間近！上映まで{}日！\n{}\n{}\n{}".format(days_left, tweet_title,
+    elif int(days_left) >= 7:
+        msg = "同志社大学映画上映情報:開催間近！上映まで{}日！\n{}\n{}\n{}".format(days_left, tweet_title,
                                                                             tweet_info,
                                                                             tweet_link.replace("../movie", "http://www.d-live.info/program/movie"))
         # print(msg.replace("</p>, <p>", "\n").replace("[<p>", "").replace("</p>]", ""))
         api.update_status(msg.replace("</p>, <p>", "\n").replace("[<p>", "").replace("</p>]", ""))
     else:
-        msg = "同志社大学映画上映情報: 上映まで{}日 \n{}\n{}\n{}".format(days_left, tweet_title,
+        msg = "同志社大学映画上映情報:上映まで{}日 \n{}\n{}\n{}".format(days_left, tweet_title,
                                                                     tweet_info,
                                                                     tweet_link.replace("../movie", "http://www.d-live.info/program/movie"))
         # print(msg.replace("</p>, <p>", "\n").replace("[<p>", "").replace("</p>]", ""))

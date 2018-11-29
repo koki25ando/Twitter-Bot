@@ -6,10 +6,10 @@ from urllib.request import urlopen as uReq
 
 # @doshishauni_inf
 appname = 'DoshishaNews_Bot'
-consumer_key = 'MVvmXgcswDTez6n4SRB89oWUT'
-consumer_secret = 'YdMUBRowq55WqwgqGStK5GjXU0sFJ4yjEuM6o4u1eYJin6NoN9'
-access_token = '1060894340912795648-UH8qqX3cWE3zgUF7rR8cP6CL5hZFeJ'
-access_secret = 'dEjiDGDQ0QzDaqzmmrqeud9b6BhTQ6d64vzVMVdtM0j0J'
+consumer_key = os.environ.get('doshisha_tb_consumer_key')
+consumer_secret = os.environ.get('doshisha_tb_consumer_secret')
+access_token = os.environ.get('doshisha_tb_access_token')
+access_secret = os.environ.get('doshisha_tb_access_secret')
 
 ##### Twitter Authentication
 
@@ -21,7 +21,7 @@ api = tweepy.API(auth)
 date = datetime.datetime.now()
 today = "{}-{}-{}".format(date.year, date.month, date.day)
 datetimeFormat = "%Y-%m-%d"
-today_format = datetime.datetime.strptime('2018-11-20', '%Y-%m-%d').strftime('%b. %d, %Y')
+today_format = datetime.datetime.strptime("2018-11-26", '%Y-%m-%d').strftime('%b. %d, %Y')
 # today_format = datetime.datetime.strptime(today, '%Y-%m-%d').strftime('%b.%d,%Y')
 
 en_url = 'https://www.doshisha.ac.jp/en/news/all/'
