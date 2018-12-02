@@ -61,16 +61,6 @@ for title_container in title_containers:
     title_url = title_container["href"]
     url_list.append(title_url)
 
-'''
-for title_container in title_containers:
-    title = title_container.text
-    title_list.append(title)
-
-for title_container in title_containers:
-    title_url = title_container["href"]
-    url_list.append(title_url)
-    # url_list.append(title_url)
-'''
 
 # End of scraping Scripts
 
