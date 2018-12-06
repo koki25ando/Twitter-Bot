@@ -1,3 +1,4 @@
+import os
 import tweepy
 import datetime
 from datetime import date, timedelta
@@ -44,37 +45,53 @@ for i in range(0, len(whole_listbox)-len(end_listbox)):
 doshisha_theater_news = pd.DataFrame({"Movie_Title" : movie_title_list, "Movie_Info" : movie_info_list, "Movie_link" : movie_link_list})
 # doshisha_theater_news['Movie_Info'] = str(doshisha_theater_news['Movie_Info'])
 date = datetime.datetime.now()
-today = "{}-{}-{}".format(date.year, date.month, date.day)
+today = "{}-{}-{}".format(date.year, date.month, "%02d" % date.day)
 datetimeFormat = "%Y-%m-%d"
 
-for i in range(0, len(doshisha_theater_news)):
+tweet_title_list = []
+tweet_info_list = []
+tweet_link_list = []
+open_date_list = []
+date_diff_list = []
+
+for i in range(len(doshisha_theater_news)):
     tweet_title = doshisha_theater_news['Movie_Title'][i]
     tweet_info = str(doshisha_theater_news['Movie_Info'][i])
     tweet_link = doshisha_theater_news['Movie_link'][i]
-    open_date = tweet_info.split('開催年月日：')[1][0:10].replace("/", "-")
+    open_date = str(doshisha_theater_news['Movie_Info'][i]).split('開催年月日：')[1][0:10].replace("/", "-")
+    tweet_title_list.append(tweet_title)
+    tweet_info_list.append(tweet_info)
+    tweet_link_list.append(tweet_link)
+    open_date_list.append(open_date)
+    date_diff = datetime.datetime.strptime(open_date_list[i], datetimeFormat) - datetime.datetime.strptime(today, datetimeFormat)
+    date_diff_list.append(date_diff)
+
+theater_news = pd.DataFrame({"Title" : tweet_title_list, "Info" : tweet_info_list, "Link" : tweet_link_list,
+                             "Open_date" : open_date_list, "Date_diff" : date_diff_list})
 
 
-    diff = datetime.datetime.strptime(open_date, datetimeFormat) - datetime.datetime.strptime(today, datetimeFormat)
-    if diff != 0:
-        days_left = diff.__str__()[:2]
+for i in range(len(theater_news)):
+    theater_news.iloc[i]
+
+for i in range(len(theater_news)):
+    if int(theater_news.iloc[i]['Date_diff'].__str__()[:7].replace("days", "").replace(" ","")) == 0:
+        msg = "同志社大学映画上映情報: 本日上映！\n{}\n{}\n{}".format(
+                                                      theater_news.iloc[i]['Title'],
+                                                      theater_news.iloc[i]['Info'].replace("</p>, <p>", "\n").replace("[<p>", "").replace("</p>]", ""),
+                                                      theater_news.iloc[i]['Link'].replace("../movie", "http://www.d-live.info/program/movie"))
+        # print(msg)
+        api.update_status(msg)
+    elif int(theater_news.iloc[i]['Date_diff'].__str__()[:7].replace("days", "").replace(" ","")) <= 7:
+        msg = "同志社大学映画上映情報: 開催間近！上映まで{}日！\n{}\n{}\n{}".format(theater_news.iloc[i]['Date_diff'].__str__()[:7].replace("days", "").replace(" ",""),
+                                                      theater_news.iloc[i]['Title'],
+                                                      theater_news.iloc[i]['Info'].replace("</p>, <p>", "\n").replace("[<p>", "").replace("</p>]", ""),
+                                                      theater_news.iloc[i]['Link'].replace("../movie", "http://www.d-live.info/program/movie"))
+        # print(msg)
+        api.update_status(msg)
     else:
-        days_left = diff.__str__()
-
-    if open_date == today:
-        msg = "同志社大学映画上映情報:本日上映！\n{}\n{}\n{}".format(tweet_title,
-                                                      tweet_info,
-                                                      tweet_link.replace("../movie", "http://www.d-live.info/program/movie"))
-        # print(msg.replace("</p>, <p>", "\n").replace("[<p>", "").replace("</p>]", ""))
-        api.update_status(msg.replace("</p>, <p>", "\n").replace("[<p>", "").replace("</p>]", ""))
-    elif int(days_left) >= 7:
-        msg = "同志社大学映画上映情報:開催間近！上映まで{}日！\n{}\n{}\n{}".format(days_left, tweet_title,
-                                                                            tweet_info,
-                                                                            tweet_link.replace("../movie", "http://www.d-live.info/program/movie"))
-        # print(msg.replace("</p>, <p>", "\n").replace("[<p>", "").replace("</p>]", ""))
-        api.update_status(msg.replace("</p>, <p>", "\n").replace("[<p>", "").replace("</p>]", ""))
-    else:
-        msg = "同志社大学映画上映情報:上映まで{}日 \n{}\n{}\n{}".format(days_left, tweet_title,
-                                                                    tweet_info,
-                                                                    tweet_link.replace("../movie", "http://www.d-live.info/program/movie"))
-        # print(msg.replace("</p>, <p>", "\n").replace("[<p>", "").replace("</p>]", ""))
-        api.update_status(msg.replace("</p>, <p>", "\n").replace("[<p>", "").replace("</p>]", ""))
+        msg = "同志社大学映画上映情報: 上映まで{}日\n{}\n{}\n{}".format(theater_news.iloc[i]['Date_diff'].__str__()[:7].replace("days", "").replace(" ",""),
+                                                      theater_news.iloc[i]['Title'],
+                                                      theater_news.iloc[i]['Info'].replace("</p>, <p>", "\n").replace("[<p>", "").replace("</p>]", ""),
+                                                      theater_news.iloc[i]['Link'].replace("../movie", "http://www.d-live.info/program/movie"))
+        # print(msg)
+        api.update_status(msg)
