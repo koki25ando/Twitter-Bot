@@ -20,8 +20,8 @@ api = tweepy.API(auth)
 
 date = datetime.datetime.now()
 today = "{}-{}-{}".format(date.year, date.month, date.day)
-today_gc = "{}-{}-{}".format(date.year, date.month, "%02d" % date.day)
-the_day = "2018-11-21"
+gc_today = "{}-{}-{}".format(date.year, date.month, "%02d" % date.day)
+the_day = "2018-1-29"
 
 commerce_url = "https://com.doshisha.ac.jp/news/news/"
 economics_url = "https://www.econ.doshisha.ac.jp/news/topics/"
@@ -99,21 +99,31 @@ for i in range(len(faculty_link_list)):
     elif url == faculty_link_list[2]:
         doshisha_news = pd.DataFrame({"publish_date" : date_list, "title" : title_list, "url" : url_list, "Faculty" : "文"})
     elif url == faculty_link_list[3]:
-        doshisha_news = pd.DataFrame({"publish_date" : date_list, "title" : title_list, "url" : url_list, "Faculty" : "グローバル地域文化"})
-    elif url == faculty_link_list[4]:
         doshisha_news = pd.DataFrame({"publish_date" : date_list, "title" : title_list, "url" : url_list, "Faculty" : "グローバルコミュニケーション"})
+    elif url == faculty_link_list[4]:
+        doshisha_news = pd.DataFrame({"publish_date" : date_list, "title" : title_list, "url" : url_list, "Faculty" : "グローバル地域文化"})
     elif url == faculty_link_list[5]:
         doshisha_news = pd.DataFrame({"publish_date" : date_list, "title" : title_list, "url" : url_list, "Faculty" : "生命医科"})
     else:
         pass
 
-    doshisha_news_today = doshisha_news[doshisha_news['publish_date'] == today[2:]]
-
-    for i in range(len(doshisha_news_today)):
-        msg = "20{}【{}学部】\n{}\nhttps://www.doshisha.ac.jp{}".format(
-              doshisha_news_today.iloc[i]['publish_date'],
-              doshisha_news_today.iloc[i]['Faculty'],
-              doshisha_news_today.iloc[i]['title'],
-              doshisha_news_today.iloc[i]['url'])
-        # print(msg)
-        api.update_status(msg)
+    if url == faculty_link_list[3]:
+        doshisha_news_today = doshisha_news[doshisha_news['publish_date'] == gc_today]
+        for i in range(len(doshisha_news_today)):
+            msg = "{}【{}学部】\n{}\n{}".format(
+                  doshisha_news_today.iloc[i]['publish_date'],
+                  doshisha_news_today.iloc[i]['Faculty'],
+                  doshisha_news_today.iloc[i]['title'],
+                  doshisha_news_today.iloc[i]['url'])
+            # print(msg)
+            api.update_status(msg)
+    else:
+        doshisha_news_today = doshisha_news[doshisha_news['publish_date'] == the_day[2:]]
+        for i in range(len(doshisha_news_today)):
+            msg = "20{}【{}学部】\n{}\nhttps://www.doshisha.ac.jp{}".format(
+                  doshisha_news_today.iloc[i]['publish_date'],
+                  doshisha_news_today.iloc[i]['Faculty'],
+                  doshisha_news_today.iloc[i]['title'],
+                  doshisha_news_today.iloc[i]['url'])
+            # print(msg)
+            api.update_status(msg)

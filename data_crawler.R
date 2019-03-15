@@ -52,11 +52,13 @@ news_info <- Doshisha_Data_Scraping(info_url)
 Doshisha.News.df <- rbind(news_important, news_info, news_topic, news_press)
 
 # Cleaning dataset
-# Doshisha.News.df$publish_date <- Doshisha.News.df$publish_date %>% 
-#  str_replace("???", "-") %>% 
-#  str_replace("???", "-") %>% 
-#  str_remove("???")
-# Doshisha.News.df$publish_date <- as.Date(Doshisha.News.df$publish_date)
+Doshisha.News.df$publish_date <- Doshisha.News.df$publish_date %>%
+ str_replace("???", "-") %>%
+ str_replace("???", "-") %>%
+ str_remove("???")
+Doshisha.News.df$publish_date <- as.Date(Doshisha.News.df$publish_date)
 
 # Exporting dataset
-write.csv(Doshisha.News.df, "/Users/KokiAndo/Desktop/Python/Doshisha/Data/Doshisha_news.csv")
+write.csv(Doshisha.News.df %>% 
+            arrange(desc(publish_date)), 
+          "/Users/KokiAndo/Desktop/Python/Doshisha/Data/Doshisha_news.csv")
