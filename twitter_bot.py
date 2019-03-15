@@ -66,7 +66,7 @@ for title_container in title_containers:
 
 
 doshisha_news = pd.DataFrame({"publish_date" : date_list, "title" : title_list, "url" : url_list})
-doshisha_news_today = doshisha_news[doshisha_news['publish_date'] == the_day[2:]]
+doshisha_news_today = doshisha_news[doshisha_news['publish_date'] == today[2:]]
 
 if len(doshisha_news_today) is 0:
     pass
